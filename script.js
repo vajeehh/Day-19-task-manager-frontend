@@ -1,5 +1,4 @@
-const API = "http://localhost:3000/tasks";
-
+const API = "https://day-19-task-manager-backend-fses.onrender.com/tasks";
 // Load tasks
 async function loadTasks() {
     let res = await axios.get(API);
