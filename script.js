@@ -2,7 +2,12 @@ const API = "https://day-19-task-manager-backend-fses.onrender.com/tasks";
 
 // Load tasks
 async function loadTasks() {
-    let res = await axios.get(API);
+
+    let userId = document.getElementById("userIdInput").value;
+
+    if (!userId) return;
+
+    let res = await axios.get(`${API}?userId=${userId}`);
 
     let tasks = res.data;
 
@@ -37,12 +42,15 @@ async function loadTasks() {
 
 // Add task
 async function addTask() {
+
+    let userId = document.getElementById("userIdInput");
     let input = document.getElementById("taskInput");
     let category = document.getElementById("categoryInput");
 
-    if (!input.value) return;
+    if (!userId.value || !input.value) return;
 
     await axios.post(API, {
+        userId: userId.value,
         title: input.value,
         category: category.value
     });
@@ -55,6 +63,7 @@ async function addTask() {
 
 // Toggle task
 async function toggleTask(id, completed) {
+
     await axios.put(`${API}/${id}`, {
         completed
     });
@@ -64,6 +73,7 @@ async function toggleTask(id, completed) {
 
 // Edit task
 async function editTask(id, oldTitle) {
+
     let newTitle = prompt("Edit task title:", oldTitle);
 
     if (!newTitle) return;
@@ -77,10 +87,11 @@ async function editTask(id, oldTitle) {
 
 // Delete task
 async function deleteTask(id) {
+
     await axios.delete(`${API}/${id}`);
 
     loadTasks();
 }
 
 // Initial load
-loadTasks();
+document.getElementById("userIdInput").addEventListener("input", loadTasks);
