@@ -21,6 +21,10 @@ async function loadTasks() {
                 ${t.completed ? 'Undo' : 'Complete'}
             </button>
 
+            <button onclick="editTask('${t._id}', '${t.title}')">
+    Edit
+</button>
+
             <button onclick="deleteTask('${t._id}')">
                 Delete
             </button>
@@ -54,6 +58,19 @@ async function toggleTask(id, completed) {
     loadTasks();
 }
 
+
+// Edit task
+async function editTask(id, oldTitle) {
+    let newTitle = prompt("Edit task title:", oldTitle);
+
+    if (!newTitle) return;
+
+    await axios.put(`${API}/${id}`, {
+        title: newTitle
+    });
+
+    loadTasks();
+}
 // Delete task
 async function deleteTask(id) {
     await axios.delete(`${API}/${id}`);
