@@ -1,4 +1,5 @@
 const API = "https://day-19-task-manager-backend-fses.onrender.com/tasks";
+
 // Load tasks
 async function loadTasks() {
     let res = await axios.get(API);
@@ -14,7 +15,7 @@ async function loadTasks() {
 
         li.innerHTML = `
             <span class="${t.completed ? 'completed' : ''}">
-                ${t.title}
+                ${t.title} - ${t.category}
             </span>
 
             <button onclick="toggleTask('${t._id}', ${!t.completed})">
@@ -22,8 +23,8 @@ async function loadTasks() {
             </button>
 
             <button onclick="editTask('${t._id}', '${t.title}')">
-    Edit
-</button>
+                Edit
+            </button>
 
             <button onclick="deleteTask('${t._id}')">
                 Delete
@@ -37,14 +38,17 @@ async function loadTasks() {
 // Add task
 async function addTask() {
     let input = document.getElementById("taskInput");
+    let category = document.getElementById("categoryInput");
 
     if (!input.value) return;
 
     await axios.post(API, {
-        title: input.value
+        title: input.value,
+        category: category.value
     });
 
     input.value = "";
+    category.value = "Personal";
 
     loadTasks();
 }
@@ -58,7 +62,6 @@ async function toggleTask(id, completed) {
     loadTasks();
 }
 
-
 // Edit task
 async function editTask(id, oldTitle) {
     let newTitle = prompt("Edit task title:", oldTitle);
@@ -71,6 +74,7 @@ async function editTask(id, oldTitle) {
 
     loadTasks();
 }
+
 // Delete task
 async function deleteTask(id) {
     await axios.delete(`${API}/${id}`);
